@@ -71,16 +71,23 @@ int heap_insert(struct heap *h, int key, int value)
 
 	return 0;
 }
-heapnode heap_extract_min(heap *h)
+struct heapnode heap_extract_min(struct heap *h)
 {
-    if (h->nnodes == 0)
-        return (heapnode){0, 0};
-    heapnode maxnode = h->nodes[1];
-    h->nodes[1] = h->nodes[h->nnodes];
-    h->nnodes--;
-    heap_heapify(h, 1);
+	if (h->nnodes == 0) {
+		return (struct heapnode){0, 0};
+	}
 
-    return maxnode;
+	
+	struct heapnode minnode = h->nodes[1];
+
+	h->nodes[1] = h->nodes[h->nnodes];
+
+	h->index[h->nodes[h->nnodes].value] = 1;
+
+	h->nnodes--;
+	heap_heapify(h, 1);
+
+	return minnode;
 }
 
 void heap_heapify(struct heap *h, int index)
