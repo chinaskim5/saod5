@@ -1,43 +1,59 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "graph.h"
-struct graph *graph_create(int vertices)
-{
-	struct graph *g;
 
-	g = malloc(sizeof(*g));
-	g->nvertices = vertices;
-	g->visited = malloc(sizeof(int) * vertices);
-	g->m = malloc(sizeof(int) * vertices * vertices);
-	graph_clear(g);
-	return g;
-}
-
-void graph_clear(struct graph *g)
+/*          CREATE          */
+graph *graph_create(int nvertices)
 {
-	int i;
-	int j;
+    graph *g = malloc(sizeof(*g));
+    g->nvertices = nvertices;
+    g->visited = malloc(sizeof(int) * nvertices);
+    g->m = malloc(sizeof(int) * nvertices * nvertices);
 
-	for (i = 0; i < g->nvertices; i++) {
-		g->visited[i] = 0;
-		for (j = 0; j < g->nvertices; j++) {
-			g->m[i * g->nvertices + j] = 0;
-		}
-	}
-}
-void graph_free(struct graph *g)
-{
-	free(g->m);
-	free(g);
+    graph_clear(g);
+
+    return g;
 }
 
-void graph_set_edge(struct graph *g, int i, int j, int w)
+/*          CLEAR          */
+void graph_clear(graph *g)
 {
-	g->m[(i - 1) * g->nvertices + j - 1] = w;
-	g->m[(j - 1) * g->nvertices + i - 1] = w;
+    int i, j;
+    for (i = 0; i < g->nvertices; i++) {
+        g->visited[i] = 0;
+        for (j = 0; j < g->nvertices; j++)
+            if (i  == j)
+                g->m[i * g->nvertices + j] = 0;
+            else
+                g->m[i * g->nvertices + j] = 65536;
+    }
 }
-int graph_get_edge(struct graph *g, int i, int j)
+
+/*          FREE          */
+void graph_free(graph *g)
 {
-	return g->m[(i - 1) * g->nvertices + j - 1];
+    if (g) {
+        if (g->m)
+            free(g->m);
+        free(g);
+    }
 }
+
+/*          SET_EDGE          */
+void graph_set_edge(graph *g, int i, int j, int w)
+{
+    g->m[(i) * g->nvertices + j ] = w;
+    g->m[(j) * g->nvertices + i ] = w;
+}
+
+/*          GET_EDGE          */
+int graph_get_edge(graph *g, int i, int j)
+{
+    return g->m[(i) * g->nvertices + j ];
+}
+
+/*          PRINT          */
 void graph_print(graph *g)
 {
     int i, j;
@@ -50,3 +66,12 @@ void graph_print(graph *g)
         printf("\n");
     }
 }
+
+/*          IS_ADJ          */
+int is_adj(graph *g, int v1, int v2)
+{
+    if (g->m[(v1) * g->nvertices + v2 ] > 0 && g->m[v1 * g->nvertices + v2] < 65536)
+        return 1;
+    return 0;
+}
+

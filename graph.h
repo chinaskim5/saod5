@@ -1,19 +1,19 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <stdlib.h>
+typedef struct {
+    int nvertices;
+    int *m;
+    int *visited;
+} graph;
 
-struct graph {
-	int nvertices;
-	int *m;
-	int *visited;
-};
-
-struct graph *graph_create(int vertices);
-void graph_clear(struct graph *g);
-void graph_free(struct graph *g);
-void graph_set_edge(struct graph *g, int i, int j, int w);
-int graph_get_edge(struct graph *g, int i, int j);
+graph *graph_create(int nvertices);
+void graph_clear(graph *g);
+void graph_free(graph *g);
+void graph_set_edge(graph *g, int i, int j, int w);
+int graph_get_edge(graph *g, int i, int j);
 
 void graph_print(graph *g);
+int is_adj(graph *g, int v1, int v2);
+
 #endif
