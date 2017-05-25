@@ -4,7 +4,7 @@
 #include "heap.h"
 #include "graph.h"
 
-#define SIZE 4
+#define SIZE 10
 
 int shortest_path(graph *g, int src, int *d, int *prev)
 {
@@ -56,10 +56,10 @@ int find_path(graph *g, int src, int dst)
         printf("%d ", d[i]);
     printf("\n");
 
-    printf("PREV: ");
+    /*printf("PREV: ");
     for (i = 0; i < g->nvertices; i++)
         printf("%d ", prev[i]);
-    printf("\n");
+    printf("\n");*/
 
 
     int  pathlen = 1, j;
